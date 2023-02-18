@@ -3,38 +3,47 @@ const btnOp = document.querySelectorAll('.op');
 const curr = document.querySelector('.curr');
 const prevOp = document.querySelector('.prev-op');
 const prevNum = document.querySelector('.prev-num')
+const audio =  document.getElementById('audio');
 
-let isOp = false;
 let lastOp;
-let op;
+let currOp;
 let prev;
 
 btnNum.forEach(btn => {
     btn.addEventListener('click', (e) => {
-        btnNumClicked(e);
+        if(curr.textContent.length <= 16)
+            btnNumClicked(e);
     });
 });
 
 btnOp.forEach(btn => {
     btn.addEventListener('click', (e) => {
+        audio.play();
         btnOpClicked(e);
     });
 });
 
 function btnNumClicked(e) {
-    if(curr.textContent == '0')
+    audio.play();
+    if(e.target.textContent == '.')
+    {
+        if(!curr.textContent.includes('.'))
+            curr.textContent += '.';
+    }
+    else if(curr.textContent == '0')
         curr.textContent = e.target.textContent
     else   
-        curr.textContent += e.target.textContent
+        curr.textContent += e.target.textContent    
 }
 
 function btnOpClicked(e) {
-    switch(e.target.textContent){
+    switch(e.target.textContent)
+    {
         case 'AC':
             curr.textContent = '0';
             prevNum.textContent = '';
-            prevOp.style.display = "none";
-            op = '';
+            prevOp.style.visibility = "hidden";
+            currOp = '';
             break;
         case 'C':
             curr.textContent = (curr.textContent.length == 1) 
@@ -46,46 +55,49 @@ function btnOpClicked(e) {
             curr.textContent = num * -1;
             break;
         case '/':
-            op = '/';
-            signsClicked(op);
+            currOp = '/';
+            signsClicked(currOp);
             break;
         case 'x':
-            op = '*';
-            signsClicked(op);
+            currOp = '*';
+            signsClicked(currOp);
             break;
         case '-':
-            op = '-';
-            signsClicked(op);
+            currOp = '-';
+            signsClicked(currOp);
             break;
         case '+':
-            op = '+';
-            signsClicked(op);
+            currOp = '+';
+            signsClicked(currOp);
             break;
         case '=':
             curr.textContent = operate();
+            break;
     }
 }
 
 function signsClicked(opr){
-    if(curr.textContent != '0'){
+    if(prevOp.textContent != '' && prevNum.textContent != '' && curr.textContent != '0')
         curr.textContent = operate();
+
+    if(curr.textContent == '0')
+        prevOp.textContent = opr;
+    
+    else
+    {
+        prevOp.style.visibility = 'visible';
+        prevOp.textContent = opr;
         prevNum.textContent = curr.textContent;
-        op = opr;
-        prevOp.style.display = 'block';
-        prevOp.textContent = op;
         curr.textContent = '0';
     }
-    else{
-        lastOp = op;
-        prevOp.textContent = opr;
-    }
-
 }
 
 function operate(){
     let num1 = Number(prevNum.textContent);
     let num2 = Number(curr.textContent);
-    switch(prevOp.textContent){
+
+    switch(prevOp.textContent)
+    {
         case '+': 
             reset();
             return num1 + num2;
@@ -103,5 +115,5 @@ function operate(){
 
 function reset(){
     prevNum.textContent = '';
-    prevOp.style.display = 'none';
+    prevOp.style.visibility = 'hidden';
 }
