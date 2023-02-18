@@ -35,13 +35,20 @@ main {
 
 .prev {
     display: flex;
+    justify-content: flex-end;
     gap: 10px;
     padding: 10px;
+}
+
+.prev-op {
+    display: none;
 }
 
 .curr {
     padding: 10px;
     font-size: xx-large;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .body {
@@ -66,4 +73,6 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
+    user-select: none;
 }
